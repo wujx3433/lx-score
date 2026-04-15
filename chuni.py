@@ -168,7 +168,6 @@ if __name__ == "__main__":
             output_content += f"等级：{player_info.get('level')}\n"
             output_content += f"Rating：{player_info.get('rating')}\n"
             output_content += f"Overpower：{player_info.get('over_power')}\n"
-            output_content += f"好友码：{player_info.get('friend_code')}\n"
             
             # 获取各部分数据
             bests_list = bests.get('bests', [])
