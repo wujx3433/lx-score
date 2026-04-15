@@ -1,3 +1,5 @@
+from unittest import result
+
 import requests
 import os
 
@@ -192,6 +194,9 @@ if __name__ == "__main__":
                 for i, score in enumerate(dx_scores, 1):
                     print(f"\n[{i}]")
                     print(format_score(score))
+
+        with open("../../public/maimai.txt", "w", encoding="utf-8") as f:
+            f.write(result)
     
     except Exception as e:
         print(f"程序错误：{e}")
