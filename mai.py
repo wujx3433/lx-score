@@ -1,5 +1,3 @@
-from unittest import result
-
 import requests
 import os
 
@@ -153,25 +151,30 @@ def get_full_maimai_data(friend_code):
 
 if __name__ == "__main__":
     try:
+        # 定义输出字符串变量，存储所有内容
+        output_content = ""
+        
         full_data, error = get_full_maimai_data(USER_ID)
         
         if error:
-            print(f"获取数据失败：{error}")
+            output_content = f"获取数据失败：{error}"
+            print(output_content)
         else:
             player_info = full_data["player_info"]
             bests = full_data["bests"]
             
-            print("=" * 60)
-            print("舞萌玩家基本信息".center(60))
-            print("=" * 60)
-            print(f"玩家名称：{player_info.get('name')}")
-            print(f"Rating：{player_info.get('rating')}")
+            # 拼接所有文本
+            output_content += "=" * 60 + "\n"
+            output_content += "舞萌玩家基本信息".center(60) + "\n"
+            output_content += "=" * 60 + "\n"
+            output_content += f"玩家名称：{player_info.get('name')}\n"
+            output_content += f"Rating：{player_info.get('rating')}\n"
             
-            print("\n" + "=" * 60)
-            print("B50 数据汇总".center(60))
-            print("=" * 60)
-            print(f"旧版本 Best 35 总分：{bests.get('standard_total')}")
-            print(f"现版本 Best 15 总分：{bests.get('dx_total')}")
+            output_content += "\n" + "=" * 60 + "\n"
+            output_content += "B50 数据汇总".center(60) + "\n"
+            output_content += "=" * 60 + "\n"
+            output_content += f"旧版本 Best 35 总分：{bests.get('standard_total')}\n"
+            output_content += f"现版本 Best 15 总分：{bests.get('dx_total')}\n"
             
             # 获取数据
             standard_scores = bests.get('standard', [])
@@ -179,26 +182,34 @@ if __name__ == "__main__":
             
             # 先展示旧版本 Best 35（完整）
             if standard_scores:
-                print("\n" + "=" * 60)
-                print(f"旧版本 Best {len(standard_scores)}".center(60))
-                print("=" * 60)
+                output_content += "\n" + "=" * 60 + "\n"
+                output_content += f"旧版本 Best {len(standard_scores)}".center(60) + "\n"
+                output_content += "=" * 60 + "\n"
                 for i, score in enumerate(standard_scores, 1):
-                    print(f"\n[{i}]")
-                    print(format_score(score))
+                    output_content += f"\n[{i}]\n"
+                    output_content += format_score(score)
             
             # 再展示现版本 Best 15（完整）
             if dx_scores:
-                print("\n" + "=" * 60)
-                print(f"现版本 Best {len(dx_scores)}".center(60))
-                print("=" * 60)
+                output_content += "\n" + "=" * 60 + "\n"
+                output_content += f"现版本 Best {len(dx_scores)}".center(60) + "\n"
+                output_content += "=" * 60 + "\n"
                 for i, score in enumerate(dx_scores, 1):
-                    print(f"\n[{i}]")
-                    print(format_score(score))
-
+                    output_content += f"\n[{i}]\n"
+                    output_content += format_score(score)
+        
+        # 打印到控制台
+        print(output_content)
+        
+        # 写入文件（使用正确的字符串变量）
         with open("../../public/maimai.txt", "w", encoding="utf-8") as f:
-            f.write(result)
-    
+            f.write(output_content)
+
     except Exception as e:
-        print(f"程序错误：{e}")
+        error_msg = f"程序错误：{e}"
+        print(error_msg)
+        # 错误信息写入文件
+        with open("../../public/maimai.txt", "w", encoding="utf-8") as f:
+            f.write(error_msg)
         import traceback
         traceback.print_exc()

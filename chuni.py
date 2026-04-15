@@ -1,5 +1,3 @@
-from unittest import result
-
 import requests
 import os
 
@@ -147,25 +145,30 @@ def get_full_chunithm_data(friend_code):
     
     return full_data, None
 
-# 测试调用
+# 测试调用 + 写入文件（修复版）
 if __name__ == "__main__":
     try:
+        # 定义存储输出内容的字符串
+        output_content = ""
+        
         full_data, error = get_full_chunithm_data(USER_ID)
         
         if error:
-            print(f"获取数据失败：{error}")
+            output_content = f"获取数据失败：{error}"
+            print(output_content)
         else:
             player_info = full_data["player_info"]
             bests = full_data["bests"]
             
-            print("=" * 60)
-            print("中二节奏玩家基本信息".center(60))
-            print("=" * 60)
-            print(f"玩家名称：{player_info.get('name')}")
-            print(f"等级：{player_info.get('level')}")
-            print(f"Rating：{player_info.get('rating')}")
-            print(f"Overpower：{player_info.get('over_power')}")
-            print(f"好友码：{player_info.get('friend_code')}")
+            # 拼接所有输出内容
+            output_content += "=" * 60 + "\n"
+            output_content += "中二节奏玩家基本信息".center(60) + "\n"
+            output_content += "=" * 60 + "\n"
+            output_content += f"玩家名称：{player_info.get('name')}\n"
+            output_content += f"等级：{player_info.get('level')}\n"
+            output_content += f"Rating：{player_info.get('rating')}\n"
+            output_content += f"Overpower：{player_info.get('over_power')}\n"
+            output_content += f"好友码：{player_info.get('friend_code')}\n"
             
             # 获取各部分数据
             bests_list = bests.get('bests', [])
@@ -174,25 +177,34 @@ if __name__ == "__main__":
             
             # 展示 Best 30
             if bests_list:
-                print("\n" + "=" * 60)
-                print(f"Best {len(bests_list)}".center(60))
-                print("=" * 60)
+                output_content += "\n" + "=" * 60 + "\n"
+                output_content += f"Best {len(bests_list)}".center(60) + "\n"
+                output_content += "=" * 60 + "\n"
                 for i, score in enumerate(bests_list, 1):
-                    print(f"\n[{i}]")
-                    print(format_chunithm_score(score))
+                    output_content += f"\n[{i}]\n"
+                    output_content += format_chunithm_score(score)
             
             # 展示 New Best
             if new_bests:
-                print("\n" + "=" * 60)
-                print(f"New Best {len(new_bests)}".center(60))
-                print("=" * 60)
+                output_content += "\n" + "=" * 60 + "\n"
+                output_content += f"New Best {len(new_bests)}".center(60) + "\n"
+                output_content += "=" * 60 + "\n"
                 for i, score in enumerate(new_bests, 1):
-                    print(f"\n[{i}]")
-                    print(format_chunithm_score(score))
+                    output_content += f"\n[{i}]\n"
+                    output_content += format_chunithm_score(score)
+        
+        # 打印到控制台（方便调试）
+        print(output_content)
+        
+        # 写入文件（用正确的字符串变量）
         with open("../../public/chunithm.txt", "w", encoding="utf-8") as f:
-            f.write(result)
+            f.write(output_content)
 
     except Exception as e:
-        print(f"程序错误：{e}")
+        error_msg = f"程序错误：{e}"
+        print(error_msg)
+        # 错误也写入文件
+        with open("../../public/chunithm.txt", "w", encoding="utf-8") as f:
+            f.write(error_msg)
         import traceback
         traceback.print_exc()
