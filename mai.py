@@ -123,7 +123,7 @@ def format_score(score):
     
     return (
         f"  曲名: {score.get('song_name', '未知')}\n"
-        f"  难度: {score.get('level', '未知')} ({map_level_index(score.get('level_index', ''))})  类型: {song_display}\n"
+        f"  难度: {score.get('level', '未知')} ({map_level_index(score.get('level_index', ''))})\n"
         f"  达成率: {score.get('achievements', 0):.4f}%\n"
         f"  DX Rating: {int(score.get('dx_rating', 0))}  评级: {map_rate(score.get('rate', '未知'))}\n"
         f"\t{fc_display}\t{fs_display}\n"
